@@ -3,17 +3,17 @@ from math import floor
 
 def amount_for(performance, play):
     if play['type'] == 'tragedy':
-        this_amount = 40000
+        result = 40000
         if performance['audience'] > 30:
-            this_amount += 1000 * (performance['audience'] - 30)
+            result += 1000 * (performance['audience'] - 30)
     elif play['type'] == 'comedy':
-        this_amount = 30000
+        result = 30000
         if performance['audience'] > 20:
-            this_amount += 10000 + 500 * (performance['audience'] - 20)
-        this_amount += 300 * performance['audience']
+            result += 10000 + 500 * (performance['audience'] - 20)
+        result += 300 * performance['audience']
     else:
         raise Exception(f'알수 없는 장르 {play["type"]}')
-    return this_amount
+    return result
 
 
 def statement(invoice, plays):
@@ -55,3 +55,11 @@ if __name__ == '__main__':
     ]
 
     print(statement(invoices[0], plays))
+    """ 출력 결과
+    청구 내역 (고객명: BigCo)
+     Hamlet: 650.0 (55석)
+     As You Like It: 580.0 (35석)
+     Othello: 500.0 (40석)
+    총액: 1730.0
+    적립 포인트: 47점
+    """
