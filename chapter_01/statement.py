@@ -16,14 +16,17 @@ def amount_for(a_performance, play):
     return result
 
 
-def statement(invoice, plays):
+def play_for(a_performance):
+    return plays[a_performance['playID']]
+
+
+def statement(invoice):
     total_amount = 0
     volume_credits = 0
     result = f'청구 내역 (고객명: {invoice["customer"]})\n'
 
     for performance in invoice['performances']:
-        play = plays[performance['playID']]
-
+        play = play_for(performance)
         this_amount = amount_for(performance, play)
 
         volume_credits += max(performance['audience'] - 30, 0)
@@ -54,7 +57,7 @@ if __name__ == '__main__':
         }
     ]
 
-    print(statement(invoices[0], plays))
+    print(statement(invoices[0]))
     """ 출력 결과
     청구 내역 (고객명: BigCo)
      Hamlet: 650.0 (55석)
