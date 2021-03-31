@@ -1,6 +1,21 @@
 from math import floor
 
 
+def amount_for(performance, play):
+    if play['type'] == 'tragedy':
+        this_amount = 40000
+        if performance['audience'] > 30:
+            this_amount += 1000 * (performance['audience'] - 30)
+    elif play['type'] == 'comedy':
+        this_amount = 30000
+        if performance['audience'] > 20:
+            this_amount += 10000 + 500 * (performance['audience'] - 20)
+        this_amount += 300 * performance['audience']
+    else:
+        raise Exception(f'알수 없는 장르 {play["type"]}')
+    return this_amount
+
+
 def statement(invoice, plays):
     total_amount = 0
     volume_credits = 0
@@ -9,17 +24,7 @@ def statement(invoice, plays):
     for performance in invoice['performances']:
         play = plays[performance['playID']]
 
-        if play['type'] == 'tragedy':
-            this_amount = 40000
-            if performance['audience'] > 30:
-                this_amount += 1000 * (performance['audience'] - 30)
-        elif play['type'] == 'comedy':
-            this_amount = 30000
-            if performance['audience'] > 20:
-                this_amount += 10000 + 500 * (performance['audience'] - 20)
-            this_amount += 300 * performance['audience']
-        else:
-            raise Exception(f'알수 없는 장르 {play["type"]}')
+        this_amount = amount_for(performance, play)
 
         volume_credits += max(performance['audience'] - 30, 0)
         if 'comedy' == play['type']:
@@ -50,4 +55,3 @@ if __name__ == '__main__':
     ]
 
     print(statement(invoices[0], plays))
-
