@@ -1,18 +1,18 @@
 from math import floor
 
 
-def amount_for(a_performance, play):
-    if play['type'] == 'tragedy':
+def amount_for(a_performance):
+    if play_for(a_performance)['type'] == 'tragedy':
         result = 40000
         if a_performance['audience'] > 30:
             result += 1000 * (a_performance['audience'] - 30)
-    elif play['type'] == 'comedy':
+    elif play_for(a_performance)['type'] == 'comedy':
         result = 30000
         if a_performance['audience'] > 20:
             result += 10000 + 500 * (a_performance['audience'] - 20)
         result += 300 * a_performance['audience']
     else:
-        raise Exception(f'알수 없는 장르 {play["type"]}')
+        raise Exception(f'알수 없는 장르 {play_for(a_performance)["type"]}')
     return result
 
 
@@ -26,7 +26,7 @@ def statement(invoice):
     result = f'청구 내역 (고객명: {invoice["customer"]})\n'
 
     for performance in invoice['performances']:
-        this_amount = amount_for(performance, play_for(performance))
+        this_amount = amount_for(performance)
 
         volume_credits += max(performance['audience'] - 30, 0)
         if 'comedy' == play_for(performance)['type']:
