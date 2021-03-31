@@ -26,13 +26,12 @@ def statement(invoice):
     result = f'청구 내역 (고객명: {invoice["customer"]})\n'
 
     for performance in invoice['performances']:
-        play = play_for(performance)
-        this_amount = amount_for(performance, play)
+        this_amount = amount_for(performance, play_for(performance))
 
         volume_credits += max(performance['audience'] - 30, 0)
-        if 'comedy' == play['type']:
+        if 'comedy' == play_for(performance)['type']:
             volume_credits += floor(performance['audience'] / 5)
-        result += f' {play["name"]}: {this_amount / 100} ({performance["audience"]}석)\n'
+        result += f' {play_for(performance)["name"]}: {this_amount / 100} ({performance["audience"]}석)\n'
         total_amount += this_amount
     result += f'총액: {total_amount/100}\n'
     result += f'적립 포인트: {volume_credits}점\n'
