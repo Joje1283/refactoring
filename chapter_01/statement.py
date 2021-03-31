@@ -1,16 +1,16 @@
 from math import floor
 
 
-def amount_for(performance, play):
+def amount_for(a_performance, play):
     if play['type'] == 'tragedy':
         result = 40000
-        if performance['audience'] > 30:
-            result += 1000 * (performance['audience'] - 30)
+        if a_performance['audience'] > 30:
+            result += 1000 * (a_performance['audience'] - 30)
     elif play['type'] == 'comedy':
         result = 30000
-        if performance['audience'] > 20:
-            result += 10000 + 500 * (performance['audience'] - 20)
-        result += 300 * performance['audience']
+        if a_performance['audience'] > 20:
+            result += 10000 + 500 * (a_performance['audience'] - 20)
+        result += 300 * a_performance['audience']
     else:
         raise Exception(f'알수 없는 장르 {play["type"]}')
     return result
