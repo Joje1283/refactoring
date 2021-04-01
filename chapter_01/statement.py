@@ -28,6 +28,10 @@ def volume_credits_for(a_performance):
     return result
 
 
+def usd(a_number):
+    return f'${round(a_number/100, 2):,}'
+
+
 def statement(invoice):
     total_amount = 0
     volume_credits = 0
@@ -35,9 +39,9 @@ def statement(invoice):
 
     for performance in invoice['performances']:
         volume_credits += volume_credits_for(performance)
-        result += f' {play_for(performance)["name"]}: {amount_for(performance) / 100} ({performance["audience"]}석)\n'
+        result += f' {play_for(performance)["name"]}: {usd(amount_for(performance))} ({performance["audience"]}석)\n'
         total_amount += amount_for(performance)
-    result += f'총액: {total_amount/100}\n'
+    result += f'총액: {usd(total_amount)}\n'
     result += f'적립 포인트: {volume_credits}점\n'
     return result
 
@@ -63,9 +67,9 @@ if __name__ == '__main__':
     print(statement(invoices[0]))
     """ 출력 결과
     청구 내역 (고객명: BigCo)
-     Hamlet: 650.0 (55석)
-     As You Like It: 580.0 (35석)
-     Othello: 500.0 (40석)
-    총액: 1730.0
+     Hamlet: $650.0 (55석)
+     As You Like It: $580.0 (35석)
+     Othello: $500.0 (40석)
+    총액: $1,730.0
     적립 포인트: 47점
     """
