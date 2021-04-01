@@ -28,21 +28,27 @@ def volume_credits_for(a_performance):
     return result
 
 
+def total_volume_credits(performances):
+    volume_credits = 0
+    for performance in performances:
+        volume_credits += volume_credits_for(performance)
+    return volume_credits
+
+
 def usd(a_number):
     return f'${round(a_number/100, 2):,}'
 
 
 def statement(invoice):
     total_amount = 0
-    volume_credits = 0
     result = f'청구 내역 (고객명: {invoice["customer"]})\n'
 
     for performance in invoice['performances']:
-        volume_credits += volume_credits_for(performance)
         result += f' {play_for(performance)["name"]}: {usd(amount_for(performance))} ({performance["audience"]}석)\n'
         total_amount += amount_for(performance)
+
     result += f'총액: {usd(total_amount)}\n'
-    result += f'적립 포인트: {volume_credits}점\n'
+    result += f'적립 포인트: {total_volume_credits(invoice["performances"])}점\n'
     return result
 
 
