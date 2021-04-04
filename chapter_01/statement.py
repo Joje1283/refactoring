@@ -2,6 +2,10 @@ from math import floor
 
 
 def statement(invoice):
+    return render_plain_text(invoice)
+
+
+def render_plain_text(invoice):
     def total_amount():
         result = 0
         for performance in invoice['performances']:
