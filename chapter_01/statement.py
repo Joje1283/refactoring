@@ -1,11 +1,11 @@
 from math import floor
 
 
-def statement(invoice):
-    return render_plain_text(invoice)
+def statement(invoice, plays):
+    return render_plain_text(invoice, plays)
 
 
-def render_plain_text(invoice):
+def render_plain_text(invoice, plays):
     def total_amount():
         result = 0
         for performance in invoice['performances']:
@@ -73,7 +73,9 @@ if __name__ == '__main__':
         }
     ]
 
-    print(statement(invoices[0]))
+    invoice = invoices[0]
+
+    print(statement(invoice, plays))
     """ 출력 결과
     청구 내역 (고객명: BigCo)
      Hamlet: $650.0 (55석)
