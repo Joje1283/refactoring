@@ -3,13 +3,28 @@ import copy
 
 
 def statement(invoice, plays):
-    def play_for(a_performance):  # render_plain_text의 중첩 함수였던 play_for를 statement로 옮김
+    def play_for(a_performance):
         return plays[a_performance['playID']]
+
+    def amount_for(a_performance):
+        if a_performance['play']['type'] == 'tragedy':
+            result = 40000
+            if a_performance['audience'] > 30:
+                result += 1000 * (a_performance['audience'] - 30)
+        elif a_performance['play']['type'] == 'comedy':
+            result = 30000
+            if a_performance['audience'] > 20:
+                result += 10000 + 500 * (a_performance['audience'] - 20)
+            result += 300 * a_performance['audience']
+        else:
+            raise Exception(f'알수 없는 장르 {a_performance["play"]["type"]}')
+        return result
 
     def enrich_performance(performances):
         result = copy.copy(performances)
         for performance in result:
-            performance['play'] = play_for(performance)  # 중간 데이터에 연극 정보를 저장
+            performance['play'] = play_for(performance)
+            performance['amount'] = amount_for(performance)
         return result
 
     statement_data = {'customer': invoice['customer'], 'performances': enrich_performance(invoice['performances'])}
@@ -20,7 +35,7 @@ def render_plain_text(data, plays):
     def total_amount():
         result = 0
         for performance in data['performances']:
-            result += amount_for(performance)
+            result += performance['amount']
         return result
 
     def total_volume_credits():
@@ -39,24 +54,10 @@ def render_plain_text(data, plays):
             result += floor(a_performance['audience'] / 5)
         return result
 
-    def amount_for(a_performance):
-        if a_performance['play']['type'] == 'tragedy':
-            result = 40000
-            if a_performance['audience'] > 30:
-                result += 1000 * (a_performance['audience'] - 30)
-        elif a_performance['play']['type'] == 'comedy':
-            result = 30000
-            if a_performance['audience'] > 20:
-                result += 10000 + 500 * (a_performance['audience'] - 20)
-            result += 300 * a_performance['audience']
-        else:
-            raise Exception(f'알수 없는 장르 {a_performance["play"]["type"]}')
-        return result
-
     result = f'청구 내역 (고객명: {data["customer"]})\n'
 
     for performance in data['performances']:
-        result += f' {performance["play"]["name"]}: {usd(amount_for(performance))} ({performance["audience"]}석)\n'
+        result += f' {performance["play"]["name"]}: {usd(performance["amount"])} ({performance["audience"]}석)\n'
 
     result += f'총액: {usd(total_amount())}\n'
     result += f'적립 포인트: {total_volume_credits()}점\n'
