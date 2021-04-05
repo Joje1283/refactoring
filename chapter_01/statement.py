@@ -20,11 +20,19 @@ def statement(invoice, plays):
             raise Exception(f'알수 없는 장르 {a_performance["play"]["type"]}')
         return result
 
+    def volume_credits_for(a_performance):
+        result = 0
+        result += max(a_performance['audience'] - 30, 0)
+        if 'comedy' == a_performance['play']['type']:
+            result += floor(a_performance['audience'] / 5)
+        return result
+
     def enrich_performance(performances):
         result = copy.copy(performances)
         for performance in result:
             performance['play'] = play_for(performance)
             performance['amount'] = amount_for(performance)
+            performance['volume_credits'] = volume_credits_for(performance)
         return result
 
     statement_data = {'customer': invoice['customer'], 'performances': enrich_performance(invoice['performances'])}
@@ -41,18 +49,11 @@ def render_plain_text(data, plays):
     def total_volume_credits():
         result = 0
         for performance in data["performances"]:
-            result += volume_credits_for(performance)
+            result += performance['volume_credits']
         return result
 
     def usd(a_number):
         return f'${round(a_number / 100, 2):,}'
-
-    def volume_credits_for(a_performance):
-        result = 0
-        result += max(a_performance['audience'] - 30, 0)
-        if 'comedy' == a_performance['play']['type']:
-            result += floor(a_performance['audience'] / 5)
-        return result
 
     result = f'청구 내역 (고객명: {data["customer"]})\n'
 
