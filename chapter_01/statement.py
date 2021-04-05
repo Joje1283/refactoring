@@ -27,6 +27,18 @@ def statement(invoice, plays):
             result += floor(a_performance['audience'] / 5)
         return result
 
+    def total_amount(data):
+        result = 0
+        for performance in data['performances']:
+            result += performance['amount']
+        return result
+
+    def total_volume_credits(data):
+        result = 0
+        for performance in data["performances"]:
+            result += performance['volume_credits']
+        return result
+
     def enrich_performance(performances):
         result = copy.copy(performances)
         for performance in result:
@@ -36,22 +48,12 @@ def statement(invoice, plays):
         return result
 
     statement_data = {'customer': invoice['customer'], 'performances': enrich_performance(invoice['performances'])}
+    statement_data['total_amount'] = total_amount(statement_data)
+    statement_data['total_volume_credits'] = total_volume_credits(statement_data)
     return render_plain_text(statement_data, plays)
 
 
 def render_plain_text(data, plays):
-    def total_amount():
-        result = 0
-        for performance in data['performances']:
-            result += performance['amount']
-        return result
-
-    def total_volume_credits():
-        result = 0
-        for performance in data["performances"]:
-            result += performance['volume_credits']
-        return result
-
     def usd(a_number):
         return f'${round(a_number / 100, 2):,}'
 
@@ -60,8 +62,8 @@ def render_plain_text(data, plays):
     for performance in data['performances']:
         result += f' {performance["play"]["name"]}: {usd(performance["amount"])} ({performance["audience"]}석)\n'
 
-    result += f'총액: {usd(total_amount())}\n'
-    result += f'적립 포인트: {total_volume_credits()}점\n'
+    result += f'총액: {usd(data["total_amount"])}\n'
+    result += f'적립 포인트: {data["total_volume_credits"]}점\n'
     return result
 
 
