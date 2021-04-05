@@ -3,6 +3,7 @@ from math import floor
 
 def statement(invoice, plays):
     statement_data = {}
+    statement_data['customer'] = invoice['customer']
     return render_plain_text(statement_data, invoice, plays)
 
 
@@ -46,7 +47,7 @@ def render_plain_text(data, invoice, plays):
             raise Exception(f'알수 없는 장르 {play_for(a_performance)["type"]}')
         return result
 
-    result = f'청구 내역 (고객명: {invoice["customer"]})\n'
+    result = f'청구 내역 (고객명: {data["customer"]})\n'
 
     for performance in invoice['performances']:
         result += f' {play_for(performance)["name"]}: {usd(amount_for(performance))} ({performance["audience"]}석)\n'
