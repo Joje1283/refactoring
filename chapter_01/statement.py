@@ -4,19 +4,20 @@ from math import floor
 def statement(invoice, plays):
     statement_data = {}
     statement_data['customer'] = invoice['customer']
-    return render_plain_text(statement_data, invoice, plays)
+    statement_data['performances'] = invoice['performances']  # 공연 정보를 중간 데이터로 옮김
+    return render_plain_text(statement_data, plays)  # 필요 없어진 인수 삭제
 
 
-def render_plain_text(data, invoice, plays):
+def render_plain_text(data, plays):
     def total_amount():
         result = 0
-        for performance in invoice['performances']:
+        for performance in data['performances']:
             result += amount_for(performance)
         return result
 
     def total_volume_credits():  # 중첩함수, 매개변수 전달 필요 X
         result = 0
-        for performance in invoice["performances"]:
+        for performance in data["performances"]:
             result += volume_credits_for(performance)
         return result
 
@@ -49,7 +50,7 @@ def render_plain_text(data, invoice, plays):
 
     result = f'청구 내역 (고객명: {data["customer"]})\n'
 
-    for performance in invoice['performances']:
+    for performance in data['performances']:
         result += f' {play_for(performance)["name"]}: {usd(amount_for(performance))} ({performance["audience"]}석)\n'
 
     result += f'총액: {usd(total_amount())}\n'
