@@ -1,3 +1,4 @@
+from functools import reduce
 from math import floor
 import copy
 
@@ -28,16 +29,10 @@ def statement(invoice, plays):
         return result
 
     def total_amount(data):
-        result = 0
-        for performance in data['performances']:
-            result += performance['amount']
-        return result
+        return reduce(lambda total, performance: total + performance['amount'], data['performances'], 0)
 
     def total_volume_credits(data):
-        result = 0
-        for performance in data["performances"]:
-            result += performance['volume_credits']
-        return result
+        return reduce(lambda total, performance: total + performance['volume_credits'], data['performances'], 0)
 
     def enrich_performance(performances):
         result = copy.copy(performances)
