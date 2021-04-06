@@ -3,6 +3,11 @@ from math import floor
 import copy
 
 
+class PerformanceCalculator:
+    def __init__(self, performance):
+        self.performance = performance
+
+
 def create_statement_data(invoice, plays):
     def play_for(a_performance):
         return plays[a_performance['playID']]
@@ -34,15 +39,16 @@ def create_statement_data(invoice, plays):
     def total_volume_credits(data):
         return reduce(lambda total, performance: total + performance['volume_credits'], data['performances'], 0)
 
-    def enrich_performance(performances):
-        result = copy.copy(performances)
-        for performance in result:
-            performance['play'] = play_for(performance)
-            performance['amount'] = amount_for(performance)
-            performance['volume_credits'] = volume_credits_for(performance)
+    def enrich_performance(performance):
+        calculator = PerformanceCalculator(performance)
+        result = copy.copy(performance)
+        result['play'] = play_for(result)
+        result['amount'] = amount_for(result)
+        result['volume_credits'] = volume_credits_for(result)
         return result
 
-    statement_data = {'customer': invoice['customer'], 'performances': enrich_performance(invoice['performances'])}
+    statement_data = {'customer': invoice['customer'],
+                      'performances': list(map(enrich_performance, invoice['performances']))}
     statement_data['total_amount'] = total_amount(statement_data)
     statement_data['total_volume_credits'] = total_volume_credits(statement_data)
     return statement_data
