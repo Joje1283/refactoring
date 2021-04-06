@@ -2,7 +2,8 @@ from functools import reduce
 from math import floor
 import copy
 
-def create_statement_data(invoice, plays):  # 중간 데이터 생성을 전담
+
+def create_statement_data(invoice, plays):
     def play_for(a_performance):
         return plays[a_performance['playID']]
 
