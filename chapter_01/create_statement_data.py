@@ -4,8 +4,9 @@ import copy
 
 
 class PerformanceCalculator:
-    def __init__(self, performance):
+    def __init__(self, performance, play):
         self.performance = performance
+        self.play = play
 
 
 def create_statement_data(invoice, plays):
@@ -40,9 +41,9 @@ def create_statement_data(invoice, plays):
         return reduce(lambda total, performance: total + performance['volume_credits'], data['performances'], 0)
 
     def enrich_performance(performance):
-        calculator = PerformanceCalculator(performance)
+        calculator = PerformanceCalculator(performance, play_for(performance))
         result = copy.copy(performance)
-        result['play'] = play_for(result)
+        result['play'] = calculator.play
         result['amount'] = amount_for(result)
         result['volume_credits'] = volume_credits_for(result)
         return result
