@@ -47,7 +47,6 @@ def create_statement_data(invoice, plays):
         return reduce(lambda total, performance: total + performance['volume_credits'], data['performances'], 0)
 
     def enrich_performance(performance):
-        # calculator = PerformanceCalculator(performance, play_for(performance))
         calculator = create_performance_calculator(performance, play_for(performance))
         result = copy.copy(performance)
         result['play'] = calculator.play
