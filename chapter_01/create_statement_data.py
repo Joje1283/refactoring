@@ -8,6 +8,15 @@ class PerformanceCalculator:
         self.performance = performance
         self.play = play
 
+    @classmethod
+    def create_performance_calculator(cls, performance, play):
+        if play['type'] == 'tragedy':
+            return TragedyCalculator(performance, play)
+        elif play['type'] == 'comedy':
+            return ComedyCalculator(performance, play)
+        else:
+            raise Exception(f'알 수 없는 장르: {play["type"]}')
+
     @property
     def amount(self):
         if self.play['type'] == 'tragedy':
@@ -32,8 +41,25 @@ class PerformanceCalculator:
         return result
 
 
-def create_performance_calculator(performance, play):
-    return PerformanceCalculator(performance, play)
+# def create_performance_calculator(performance, play):
+#     if play['type'] == 'tragedy':
+#         return TragedyCalculator(performance, play)
+#     elif play['type'] == 'comedy':
+#         return ComedyCalculator(performance, play)
+#     else:
+#         raise Exception(f'알 수 없는 장르: {play["type"]}')
+
+
+class TragedyCalculator(PerformanceCalculator):
+    def __init__(self, *args, **kwargs):
+        result = super().__init__(*args, **kwargs)
+        print('TragedyCalculator')
+
+
+class ComedyCalculator(PerformanceCalculator):
+    def __init__(self, *args, **kwargs):
+        result = super(ComedyCalculator, self).__init__(*args, **kwargs)
+        print('ComedyCalculator')
 
 
 def create_statement_data(invoice, plays):
@@ -47,7 +73,7 @@ def create_statement_data(invoice, plays):
         return reduce(lambda total, performance: total + performance['volume_credits'], data['performances'], 0)
 
     def enrich_performance(performance):
-        calculator = create_performance_calculator(performance, play_for(performance))
+        calculator = PerformanceCalculator.create_performance_calculator(performance, play_for(performance))
         result = copy.copy(performance)
         result['play'] = calculator.play
         result['amount'] = calculator.amount
