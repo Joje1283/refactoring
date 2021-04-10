@@ -4,13 +4,13 @@ import copy
 from abc import ABCMeta, abstractmethod
 
 
-class PerformanceCalculator(metaclass=ABCMeta):
+class PerformanceCalculator(metaclass=ABCMeta):  # 추상 클래스
     def __init__(self, performance, play):
         self.performance = performance
         self.play = play
 
     @classmethod
-    def create_performance_calculator(cls, performance, play):
+    def create_performance_calculator(cls, performance, play):  # 생성자 대신 팩터리 함수를 이용한 인스턴스 반환
         if play['type'] == 'tragedy':
             return TragedyCalculator(performance, play)
         elif play['type'] == 'comedy':
@@ -33,7 +33,7 @@ class TragedyCalculator(PerformanceCalculator):
         print('TragedyCalculator')
 
     @property
-    def amount(self):
+    def amount(self):  # 추상 메서드
         result = 40000
         if self.performance['audience'] > 30:
             result += 1000 * (self.performance['audience'] - 30)
@@ -46,7 +46,7 @@ class ComedyCalculator(PerformanceCalculator):
         print('ComedyCalculator')
 
     @property
-    def amount(self):
+    def amount(self):  # 추상 메서드
         result = 30000
         if self.performance['audience'] > 20:
             result += 10000 + 500 * (self.performance['audience'] - 20)
@@ -54,7 +54,7 @@ class ComedyCalculator(PerformanceCalculator):
         return result
 
     @property
-    def volume_credits(self):
+    def volume_credits(self):  # 오버라이드
         result = super().volume_credits
         result += floor(self.performance['audience'] / 5)
         return result
@@ -73,9 +73,9 @@ def create_statement_data(invoice, plays):
     def enrich_performance(performance):
         calculator = PerformanceCalculator.create_performance_calculator(performance, play_for(performance))
         result = copy.copy(performance)
-        result['play'] = calculator.play
-        result['amount'] = calculator.amount
-        result['volume_credits'] = calculator.volume_credits
+        result['play'] = calculator.play  # 공연 이름 및 타입
+        result['amount'] = calculator.amount  # 공연 견적 (가격)
+        result['volume_credits'] = calculator.volume_credits  # 공연에 대한 적립 포인트
         return result
 
     statement_data = {'customer': invoice['customer'],
