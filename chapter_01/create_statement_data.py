@@ -2,6 +2,7 @@ from functools import reduce
 from math import floor
 import copy
 from abc import ABCMeta, abstractmethod
+from pipelist import On
 
 
 class PerformanceCalculator(metaclass=ABCMeta):  # 추상 클래스
@@ -80,6 +81,7 @@ def create_statement_data(invoice, plays):
 
     statement_data = {'customer': invoice['customer'],
                       'performances': list(map(enrich_performance, invoice['performances']))}
+    # list(On(invoice['performances']).map(enrich_performance))
     statement_data['total_amount'] = total_amount(statement_data)
     statement_data['total_volume_credits'] = total_volume_credits(statement_data)
     return statement_data
