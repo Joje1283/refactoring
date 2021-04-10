@@ -32,6 +32,10 @@ class PerformanceCalculator:
         return result
 
 
+def create_performance_calculator(performance, play):
+    return PerformanceCalculator(performance, play)
+
+
 def create_statement_data(invoice, plays):
     def play_for(a_performance):
         return plays[a_performance['playID']]
@@ -43,7 +47,8 @@ def create_statement_data(invoice, plays):
         return reduce(lambda total, performance: total + performance['volume_credits'], data['performances'], 0)
 
     def enrich_performance(performance):
-        calculator = PerformanceCalculator(performance, play_for(performance))
+        # calculator = PerformanceCalculator(performance, play_for(performance))
+        calculator = create_performance_calculator(performance, play_for(performance))
         result = copy.copy(performance)
         result['play'] = calculator.play
         result['amount'] = calculator.amount
