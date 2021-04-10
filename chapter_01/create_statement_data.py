@@ -23,18 +23,18 @@ class PerformanceCalculator:
             raise Exception(f'알수 없는 장르 {self.play["type"]}')
         return result
 
+    @property
+    def volume_credits(self):
+        result = 0
+        result += max(self.performance['audience'] - 30, 0)
+        if 'comedy' == self.play['type']:
+            result += floor(self.performance['audience'] / 5)
+        return result
 
 
 def create_statement_data(invoice, plays):
     def play_for(a_performance):
         return plays[a_performance['playID']]
-
-    def volume_credits_for(a_performance):
-        result = 0
-        result += max(a_performance['audience'] - 30, 0)
-        if 'comedy' == a_performance['play']['type']:
-            result += floor(a_performance['audience'] / 5)
-        return result
 
     def total_amount(data):
         return reduce(lambda total, performance: total + performance['amount'], data['performances'], 0)
@@ -47,7 +47,7 @@ def create_statement_data(invoice, plays):
         result = copy.copy(performance)
         result['play'] = calculator.play
         result['amount'] = calculator.amount
-        result['volume_credits'] = volume_credits_for(result)
+        result['volume_credits'] = calculator.volume_credits
         return result
 
     statement_data = {'customer': invoice['customer'],
