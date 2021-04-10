@@ -8,6 +8,7 @@ class PerformanceCalculator:
         self.performance = performance
         self.play = play
 
+    @property
     def amount(self):
         if self.play['type'] == 'tragedy':
             result = 40000
@@ -28,9 +29,6 @@ def create_statement_data(invoice, plays):
     def play_for(a_performance):
         return plays[a_performance['playID']]
 
-    def amount_for(a_performance):
-        return PerformanceCalculator(a_performance, play_for(a_performance)).amount()
-
     def volume_credits_for(a_performance):
         result = 0
         result += max(a_performance['audience'] - 30, 0)
@@ -48,7 +46,7 @@ def create_statement_data(invoice, plays):
         calculator = PerformanceCalculator(performance, play_for(performance))
         result = copy.copy(performance)
         result['play'] = calculator.play
-        result['amount'] = amount_for(result)
+        result['amount'] = calculator.amount
         result['volume_credits'] = volume_credits_for(result)
         return result
 

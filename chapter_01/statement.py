@@ -57,8 +57,8 @@ if __name__ == '__main__':
 
     invoice = invoices[0]
 
-    # print(statement(invoice, plays))
-    print(html_statement(invoice, plays))
+    print(statement(invoice, plays))
+    # print(html_statement(invoice, plays))
     """ 출력 결과
     청구 내역 (고객명: BigCo)
      Hamlet: $650.0 (55석)
