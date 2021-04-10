@@ -1,9 +1,10 @@
 from functools import reduce
 from math import floor
 import copy
+from abc import ABCMeta, abstractmethod
 
 
-class PerformanceCalculator:
+class PerformanceCalculator(metaclass=ABCMeta):
     def __init__(self, performance, play):
         self.performance = performance
         self.play = play
@@ -17,37 +18,13 @@ class PerformanceCalculator:
         else:
             raise Exception(f'알 수 없는 장르: {play["type"]}')
 
-    @property
+    @abstractmethod
     def amount(self):
-        if self.play['type'] == 'tragedy':
-            result = 40000
-            if self.performance['audience'] > 30:
-                result += 1000 * (self.performance['audience'] - 30)
-        elif self.play['type'] == 'comedy':
-            result = 30000
-            if self.performance['audience'] > 20:
-                result += 10000 + 500 * (self.performance['audience'] - 20)
-            result += 300 * self.performance['audience']
-        else:
-            raise Exception(f'알수 없는 장르 {self.play["type"]}')
-        return result
+        pass
 
     @property
     def volume_credits(self):
-        result = 0
-        result += max(self.performance['audience'] - 30, 0)
-        if 'comedy' == self.play['type']:
-            result += floor(self.performance['audience'] / 5)
-        return result
-
-
-# def create_performance_calculator(performance, play):
-#     if play['type'] == 'tragedy':
-#         return TragedyCalculator(performance, play)
-#     elif play['type'] == 'comedy':
-#         return ComedyCalculator(performance, play)
-#     else:
-#         raise Exception(f'알 수 없는 장르: {play["type"]}')
+        return max(self.performance['audience'] - 30, 0)
 
 
 class TragedyCalculator(PerformanceCalculator):
@@ -55,11 +32,32 @@ class TragedyCalculator(PerformanceCalculator):
         result = super().__init__(*args, **kwargs)
         print('TragedyCalculator')
 
+    @property
+    def amount(self):
+        result = 40000
+        if self.performance['audience'] > 30:
+            result += 1000 * (self.performance['audience'] - 30)
+        return result
+
 
 class ComedyCalculator(PerformanceCalculator):
     def __init__(self, *args, **kwargs):
         result = super(ComedyCalculator, self).__init__(*args, **kwargs)
         print('ComedyCalculator')
+
+    @property
+    def amount(self):
+        result = 30000
+        if self.performance['audience'] > 20:
+            result += 10000 + 500 * (self.performance['audience'] - 20)
+        result += 300 * self.performance['audience']
+        return result
+
+    @property
+    def volume_credits(self):
+        result = super().volume_credits
+        result += floor(self.performance['audience'] / 5)
+        return result
 
 
 def create_statement_data(invoice, plays):
