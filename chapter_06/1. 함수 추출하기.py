@@ -3,10 +3,18 @@ from datetime import datetime, timedelta
 
 # 예시1 : 유효번위를 벗어나는 변수가 없을 때
 def print_owing(invoice):
+    def print_banner():
+        print("*****************")
+        print("**** 고객 채무 ****")
+        print("*****************")
+
+    def print_details():
+        print(f'고객명: {invoice["customer"]}')
+        print(f'채무액: {outstanding}')
+        print(f'마감일: {invoice["due_date"].strftime("%Y-%m-%d")}')
+
     outstanding = 0
-    print("*****************")
-    print("**** 고객 채무 ****")
-    print("*****************")
+    print_banner()
 
     # 미해결 채무를 계산한다.
     for o in invoice['orders']:
@@ -16,9 +24,7 @@ def print_owing(invoice):
     invoice['due_date'] = datetime.now() + timedelta(days=30)
 
     # 세부 사항을 출력한다.
-    print(f'고객명: {invoice["customer"]}')
-    print(f'채무액: {outstanding}')
-    print(f'마감일: {invoice["due_date"].strftime("%Y-%m-%d")}')
+    print_details()
 
 
 if __name__ == '__main__':
