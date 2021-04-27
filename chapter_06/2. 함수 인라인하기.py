@@ -1,9 +1,5 @@
 def rating(driver):
-    return 2 if more_than_five_late_deliveries(driver) else 1
-
-
-def more_than_five_late_deliveries(driver):
-    return driver['number_of_late_deliveries'] > 5
+    return 2 if driver['number_of_late_deliveries'] > 5 else 1
 
 
 if __name__ == '__main__':
