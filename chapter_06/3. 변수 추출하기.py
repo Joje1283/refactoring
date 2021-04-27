@@ -8,5 +8,5 @@ def price(order):
 if __name__ == '__main__':
     print(price({
         'quantity': 10,
-        'item_pric시e': 1000,
+        'item_price': 1000,
     }))
