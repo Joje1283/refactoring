@@ -11,14 +11,19 @@ def print_owing(invoice):
     print_banner()
 
     # 미해결 채무를 계산한다.
-    outstanding = 0
-    for o in invoice['orders']:
-        outstanding += o['amount']
+    outstanding = calculate_outstanding(invoice)
 
     # 마감일(dueDate)을 기록한다.
     record_due_date(invoice)
     # 세부 사항을 출력한다.
     print_details(invoice, outstanding)
+
+
+def calculate_outstanding(invoice):
+    result = 0
+    for o in invoice['orders']:
+        result += o['amount']
+    return result
 
 
 def record_due_date(invoice):
