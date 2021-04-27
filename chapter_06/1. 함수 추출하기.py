@@ -8,10 +8,10 @@ def print_owing(invoice):
         print("**** 고객 채무 ****")
         print("*****************")
 
-    outstanding = 0
     print_banner()
 
     # 미해결 채무를 계산한다.
+    outstanding = 0
     for o in invoice['orders']:
         outstanding += o['amount']
 
