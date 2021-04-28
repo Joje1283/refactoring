@@ -12,5 +12,5 @@ if __name__ == '__main__':
         {'address': {'state': 'KO'}},
         {'address': {'state': 'AA'}},
     ]
-    new_englanders = filter(lambda x: in_new_england(x), some_customers)
+    new_englanders = filter(lambda x: xx_in_new_england(x['address']['state']), some_customers)
     print(list(new_englanders))
