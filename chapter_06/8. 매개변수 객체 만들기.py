@@ -28,10 +28,13 @@ class NumberRange:
     def max(self):
         return self._data['max']
 
+    def contains(self, arg):
+        return self.min <= arg <= self.max
+
 
 # 정상 범위를 벗어난 측정값을 찾는 함수
 def readings_outside_range(station, range=None):
-    return list(filter(lambda x: x['temp'] < range.min or x['temp'] > range.max, station['readings']))
+    return list(filter(lambda x: not range.contains(x['temp']), station['readings']))
 
 
 # 호출문
